@@ -4,15 +4,15 @@ var labels = [];
 var state_labels = [];
 var days = {};
 
-function getDays(data, country) {
+function getDays(data, countries) {
   var confirmed = [];
-  for (var day of data[country]) {
+  for (var day of data[countries]) {
     if (day["confirmed"] < 25) continue;
     confirmed.push(day["confirmed"]);
 
     if (confirmed.length > labels.length) labels.push(labels.length);
   }
-  days[country] = confirmed;
+  days[countries] = confirmed;
   return confirmed;
 }
 
@@ -109,9 +109,22 @@ var states = [
   "Connecticut",
   "Pennsylvania",
   "North Carolina",
-  "Massachusetts",
-  // "Colorado",
+  "Massachusetts"
 ];
+
+// Quick hack to allow State, country override
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let statesQuery = urlParams.get('states');
+let countriesQuery = urlParams.get('countries');
+if (statesQuery) {
+  let statesArray = statesQuery.split(',');
+  states = statesArray;
+}
+if (countriesQuery) {
+  let countriesArray = countriesQuery.split(',');
+  countries = countriesArray;
+}
 
 var config = {
   type: "line",
